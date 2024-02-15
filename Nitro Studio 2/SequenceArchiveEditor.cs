@@ -3,8 +3,6 @@ using GotaSequenceLib.Playback;
 using GotaSoundIO.IO;
 using GotaSoundIO.Sound;
 using NitroFileLoader;
-using ScintillaNET;
-using ScintillaNET_FindReplaceDialog;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -30,7 +28,6 @@ namespace NitroStudio2 {
         int prevLine = -1;
         bool prevLineBlank = true;
         int seqTableStartLine = -1;
-        private FindReplace MyFindReplace;
         public bool PositionBarFree = true;
         public Timer Timer = new Timer();
 
@@ -40,7 +37,6 @@ namespace NitroStudio2 {
         /// <param name="mainWindow">The main window.</param>
         public SequenceArchiveEditor(MainWindow mainWindow) : base(typeof(SequenceArchive), "Sequence Archive", "sar", "Sequence Archive Editor", mainWindow) {
             Init();
-            LoadSequenceText();
         }
 
         /// <summary>
@@ -49,7 +45,6 @@ namespace NitroStudio2 {
         /// <param name="fileToOpen">File to open.</param>
         public SequenceArchiveEditor(string fileToOpen) : base(typeof(SequenceArchive), "Sequence Archive", "sar", "Sequence Archive Editor", fileToOpen, null) {
             Init();
-            LoadSequenceText(Path.GetFileNameWithoutExtension(fileToOpen));
             PopulateSequenceComboBox();
         }
 
@@ -62,7 +57,6 @@ namespace NitroStudio2 {
         public SequenceArchiveEditor(IOFile fileToOpen, MainWindow mainWindow, string fileName) : base(typeof(SequenceArchive), "Sequence Archive", "sar", "Sequence Archive Editor", fileToOpen, mainWindow, fileName) {
             Init();
             CopyOtherPropertiesFromFile(SA, fileToOpen as SequenceArchive);
-            LoadSequenceText(fileName);
             PopulateSequenceComboBox();
         }
 
@@ -116,8 +110,8 @@ namespace NitroStudio2 {
             track14Solo.Click += new EventHandler(Track14Solo);
             track15Solo.Click += new EventHandler(Track15Solo);
             Mixer.Volume = .75f;
-            sequenceEditor.Insert += scintilla_Insert;
-            sequenceEditor.Delete += scintilla_Delete;
+            // sequenceEditor.Insert += scintilla_Insert;
+            // sequenceEditor.Delete += scintilla_Delete;
             kermalisPlayButton.Click += new EventHandler(PlayClick);
             kermalisPauseButton.Click += new EventHandler(PauseClick);
             kermalisStopButton.Click += new EventHandler(StopClick);
@@ -126,15 +120,11 @@ namespace NitroStudio2 {
             kermalisPosition.MouseUp += new MouseEventHandler(PositionMouseUp);
             kermalisPosition.MouseDown += new MouseEventHandler(PositionMouseDown);
             FormClosing += new FormClosingEventHandler(SEClosing);
-            Load += new System.EventHandler(this.SequenceEditor_Load);
             seqEditorBankBox.ValueChanged += new EventHandler(BankBoxChanged);
             seqEditorBankComboBox.SelectedIndexChanged += new EventHandler(BankComboChanged);
             seqArcSeqBox.ValueChanged += new EventHandler(SeqArcBoxChanged);
             seqArcSeqComboBox.SelectedIndexChanged += new EventHandler(SeqArcComboBoxChanged);
             status.Text = "Editing A Sequence Archive.";
-            MyFindReplace = new FindReplace();
-            MyFindReplace.Scintilla = sequenceEditor;
-            sequenceEditor.KeyDown += new KeyEventHandler(genericScintilla_KeyDown);
             splitContainer1.SplitterDistance += 20;
             Timer.Tick += PositionTick;
             Timer.Interval = 1000 / 30;
@@ -196,126 +186,6 @@ namespace NitroStudio2 {
         /// </summary>
         public override void DoInfoStuff() {}
 
-        private void MyFindReplace_KeyPressed(object sender, KeyEventArgs e) {
-            genericScintilla_KeyDown(sender, e);
-        }
-
-        private void MyFindReplace_FindAllResults(object sender, FindResultsEventArgs FindAllResults) {
-            // Pass on find results
-            //findAllResultsPanel1.UpdateFindAllResults(FindAllResults.FindReplace, FindAllResults.FindAllResults);
-        }
-
-        private void GotoButton_Click(object sender, EventArgs e) {
-            // Use the FindReplace Scintilla as this will change based on focus
-            GoTo MyGoTo = new GoTo(MyFindReplace.Scintilla);
-            MyGoTo.ShowGoToDialog();
-        }
-
-        /// <summary>
-		/// Key down event for each Scintilla. Tie each Scintilla to this event
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void genericScintilla_KeyDown(object sender, KeyEventArgs e) {
-            if (e.Control && e.KeyCode == Keys.F) {
-                MyFindReplace.ShowFind();
-                e.SuppressKeyPress = true;
-            } else if (e.Shift && e.KeyCode == Keys.F3) {
-                MyFindReplace.Window.FindPrevious();
-                e.SuppressKeyPress = true;
-            } else if (e.KeyCode == Keys.F3) {
-                MyFindReplace.Window.FindNext();
-                e.SuppressKeyPress = true;
-            } else if (e.Control && e.KeyCode == Keys.H) {
-                MyFindReplace.ShowReplace();
-                e.SuppressKeyPress = true;
-            } else if (e.Control && e.KeyCode == Keys.I) {
-                MyFindReplace.ShowIncrementalSearch();
-                e.SuppressKeyPress = true;
-            } else if (e.Control && e.KeyCode == Keys.G) {
-                GoTo MyGoTo = new GoTo((Scintilla)sender);
-                MyGoTo.ShowGoToDialog();
-                e.SuppressKeyPress = true;
-            }
-        }
-
-        /// <summary>
-        /// Enter event tied to each Scintilla that will share a FindReplace dialog.
-        /// Tie each Scintilla to this event.
-        /// </summary>
-        /// <param name="sender">The Scintilla receiving focus</param>
-        /// <param name="e"></param>
-        private void genericScintilla1_Enter(object sender, EventArgs e) {
-            MyFindReplace.Scintilla = (Scintilla)sender;
-        }
-
-        /// <summary>
-        /// Load the editor.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SequenceEditor_Load(object sender, EventArgs e) {
-
-            //Init style.
-            sequenceEditor.Dock = DockStyle.Fill;
-            sequenceEditor.WrapMode = WrapMode.None;
-            sequenceEditor.IndentationGuides = IndentView.LookBoth;
-            sequenceEditor.StyleResetDefault();
-            sequenceEditor.Styles[Style.Default].Font = "Consolas";
-            sequenceEditor.Styles[Style.Default].Size = 11;
-            sequenceEditor.Styles[Style.Default].BackColor = IntToColor(0x212121);
-            sequenceEditor.Styles[Style.Default].ForeColor = IntToColor(0xE7E7E7);
-            sequenceEditor.CaretForeColor = IntToColor(0xFFFFFF);
-            sequenceEditor.StyleClearAll();
-            sequenceEditor.ScrollWidth = 1;
-            sequenceEditor.ScrollWidthTracking = true;
-            sequenceEditor.Styles[Style.LineNumber].BackColor = IntToColor(BACK_COLOR);
-            sequenceEditor.Styles[Style.LineNumber].ForeColor = IntToColor(FORE_COLOR);
-            sequenceEditor.Styles[Style.IndentGuide].ForeColor = IntToColor(FORE_COLOR);
-            sequenceEditor.Styles[Style.IndentGuide].BackColor = IntToColor(BACK_COLOR);
-            sequenceEditor.Lexer = Lexer.Container;
-            sequenceEditor.StyleNeeded += new EventHandler<StyleNeededEventArgs>(this.SEQ_StyleNeeded);
-            //sequenceEditor.UpdateUI += new EventHandler<UpdateUIEventArgs>(this.SEQ_Changed);
-            sequenceEditor.TextChanged += new EventHandler(this.SEQ_ChangedText);
-            StyleSeq(0, sequenceEditor.Text.Length);
-            UpdateLineNumbers(0, sequenceEditor.Text.Length);
-            SEQ_ChangedText(null, null);
-
-        }
-
-        /// <summary>
-        /// Sequence changed text.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SEQ_ChangedText(object sender, EventArgs e) {
-
-            //Remove comment area.
-            string s = sequenceEditor.Lines[sequenceEditor.CurrentLine].Text;
-            if (s.Contains(";")) {
-                s = s.Split(';')[0];
-            }
-
-            //Remove spaces.
-            var ss = sequenceEditor.Lines[sequenceEditor.CurrentLine].Text.Replace(" ", "").Replace("\t", "").Replace("\r", "").Replace("\n", "");
-            if (sequenceEditor.CurrentLine != prevLine || (prevLineBlank != (ss.EndsWith(":") || ss == ""))) {
-                if (sequenceEditor.CurrentLine <= seqTableStartLine || seqTableStartLine == -1) {
-                    var l = sequenceEditor.Lines.Where(x => x.Text.StartsWith("@SEQ_DATA")).FirstOrDefault();
-                    if (l != null) {
-                        seqTableStartLine = l.Index;
-                    } else {
-                        seqTableStartLine = -1;
-                    }
-                }
-                UpdateLineNumbers(sequenceEditor.CurrentLine, sequenceEditor.Lines.Count);
-                PopulateSequenceComboBox();
-                if (seqArcSeqComboBox.Items.Count > 0 && seqArcSeqComboBox.SelectedIndex == -1) { seqArcSeqComboBox.SelectedIndex = 0; }
-                prevLine = sequenceEditor.CurrentLine;
-                prevLineBlank = (ss.EndsWith(":") || ss == ""); 
-            }
-
-        }
-
         /// <summary>
         /// Update sequence.
         /// </summary>
@@ -327,145 +197,6 @@ namespace NitroStudio2 {
                 SA.FromText(sequenceEditor.Text.Replace('\r', '\n').Split('\n').ToList(), MainWindow.SA);
                 UpdateNodes();
             } catch (Exception exe) { MessageBox.Show(exe.Message); }
-
-        }
-
-        /// <summary>
-        /// SEQ needs style.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SEQ_StyleNeeded(object sender, StyleNeededEventArgs e) {
-            var startPos = sequenceEditor.GetEndStyled();
-            var endPos = e.Position;
-
-            if (startPos >= 500) { startPos -= 500; } else { startPos = 0; }
-            if ((sequenceEditor.Text.Length - endPos) >= 500) { endPos += 500; } else { endPos = sequenceEditor.Text.Length; }
-
-            StyleSeq(startPos, endPos);
-        }
-
-        /// <summary>
-        /// Style the SEQ.
-        /// </summary>
-        /// <param name="startPos"></param>
-        /// <param name="endPos"></param>
-        public void StyleSeq(int startPos, int endPos) {
-
-            //Syntax highlighting.
-            sequenceEditor.Styles[(int)CommandStyleType.Regular].ForeColor = IntToColor(0xE7E7E7);
-            sequenceEditor.Styles[(int)CommandStyleType.Comment].ForeColor = IntToColor(0xAEAEAE);
-            sequenceEditor.Styles[(int)CommandStyleType.SeqArc].ForeColor = IntToColor(0x4AF0B6);
-            sequenceEditor.Styles[(int)CommandStyleType.Label].ForeColor = IntToColor(0xE7BB00);
-            sequenceEditor.Styles[(int)CommandStyleType.Prefix].ForeColor = IntToColor(0x4AF0B6);
-            sequenceEditor.Styles[(int)CommandStyleType.Value0].ForeColor = Color.Red;
-            sequenceEditor.Styles[(int)CommandStyleType.Value1].ForeColor = Color.Orange;
-            sequenceEditor.Styles[(int)CommandStyleType.Value2].ForeColor = Color.Yellow;
-            sequenceEditor.Styles[(int)CommandStyleType.Value3].ForeColor = Color.LimeGreen;
-            sequenceEditor.Styles[(int)CommandStyleType.Value4].ForeColor = Color.LightBlue;
-            sequenceEditor.Styles[(int)CommandStyleType.Value5].ForeColor = Color.PaleVioletRed;
-
-            //Sum.
-            int pos = startPos;
-            if (endPos > sequenceEditor.Text.Length) {
-                endPos = sequenceEditor.Text.Length;
-            }
-            CommandStyleType style = CommandStyleType.Regular;
-            string[] lines = sequenceEditor.Text.Substring(startPos, endPos - startPos).Split('\n');
-            foreach (string s in lines) {
-
-                //Do each char.
-                style = CommandStyleType.Regular;
-                bool initialSpaceCut = false;
-                string withoutInitialSpace = s.Replace("\t", " ");
-                int numWhiteSpace = 0;
-                for (int j = 0; j < s.Length; j++) {
-
-                    //Convert tabs to spaces.
-                    string l = s.Replace("\t", " ");
-
-                    //Label.
-                    if (l.Contains(":") && j == 0) {
-                        sequenceEditor.StartStyling(pos);
-                        sequenceEditor.SetStyling(l.IndexOf(':') + 1, (int)CommandStyleType.Label);
-                        j += l.IndexOf(':') + 1;
-                        if (j >= l.Length) {
-                            break;
-                        }
-                    }
-
-                    //Jump to cut off intro spaces.
-                    bool kill = false;
-                    while ((l[j] == ' ') && !initialSpaceCut) {
-                        j++;
-                        if (j >= l.Length) {
-                            kill = true;
-                            break;
-                        } else {
-                            withoutInitialSpace = l.Substring(j, l.Length - j);
-                            numWhiteSpace = j;
-                        }
-                    }
-                    initialSpaceCut = true;
-                    if (kill) {
-                        break;
-                    }
-
-                    //Get char and index.
-                    char c = l[j];
-                    int ind = j + pos;
-
-                    //Comment.
-                    if (c == ';') {
-                        sequenceEditor.StartStyling(ind);
-                        sequenceEditor.SetStyling(l.Length - j, (int)CommandStyleType.Comment);
-                        break;
-                    }
-
-                    //SeqArc.
-                    if (c == '@') {
-                        sequenceEditor.StartStyling(ind);
-                        sequenceEditor.SetStyling(l.Length - j, (int)CommandStyleType.SeqArc);
-                        break;
-                    }
-
-                    //Prefix.
-                    if (c == '_') {
-
-                        //Check prefix.
-                        string p = l.Substring(j, l.Length - j).Split(' ')[0];
-                        bool afterSpace = false;
-                        if (withoutInitialSpace.Contains(" ")) {
-                            if (j > withoutInitialSpace.IndexOf(" ") + numWhiteSpace) { afterSpace = true; }
-                        }
-                        if (!afterSpace && (p.Contains("_if ") || p.Contains("_v ") || p.Contains("_r ") || p.Contains("_t ") || p.Contains("_tr ") || p.Contains("_tv ") || p.EndsWith("_if") || p.EndsWith("_v") || p.EndsWith("_t") || p.EndsWith("_tv") || p.EndsWith("_tr") || p.EndsWith("_r"))) {
-                            style = CommandStyleType.Prefix;
-                        }
-
-                    }
-
-                    //Space.
-                    if (c == ' ') {
-                        if (j > 0) {
-                            if (l[j - 1] != ' ') {
-                                if (style < CommandStyleType.Prefix) {
-                                    style = CommandStyleType.Prefix;
-                                }
-                                style++;
-                            }
-                        }
-                    }
-
-                    //Do style.
-                    sequenceEditor.StartStyling(ind);
-                    sequenceEditor.SetStyling(1, (int)style);
-
-                }
-
-                //Add position, plus one for \r.
-                pos += s.Length + 1;
-
-            }
 
         }
 
@@ -483,40 +214,6 @@ namespace NitroStudio2 {
         /// <returns></returns>
         public static Color IntToColor(int rgb) {
             return Color.FromArgb(255, (byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb);
-        }
-
-        /// <summary>
-        /// Load sequence text.
-        /// </summary>
-        public void LoadSequenceText(string name = "Sequence") {
-
-            //Why not.
-            sequenceEditor.Margins[0].Type = MarginType.RightText;
-            sequenceEditor.Margins[0].Width = 35;
-
-            //File is not null.
-            if (File != null) {
-
-                //Not read only.
-                sequenceEditor.ReadOnly = false;
-
-                //Load commands.
-                SA.ReadCommandData(true);
-                SA.Name = name;
-
-                //Set the text.
-                sequenceEditor.Text = String.Join("\n", SA.ToText());
-
-            }
-
-            //File is null.
-            else {
-                sequenceEditor.Text = "{ NULL FILE INFO }";
-            }
-
-            //Update line numbers.
-            UpdateLineNumbers(0, sequenceEditor.Lines.Count);
-
         }
 
         /// <summary>
@@ -546,9 +243,6 @@ namespace NitroStudio2 {
                 //Past sequence data start.
                 if (i > seqTableStartLine) {
 
-                    //Set style.
-                    sequenceEditor.Lines[i].MarginStyle = Style.LineNumber;
-
                     //Remove comment area.
                     string s = sequenceEditor.Lines[i].Text;
                     if (s.Contains(";")) {
@@ -577,44 +271,45 @@ namespace NitroStudio2 {
         /// </summary>
         /// <returns>The sequence names.</returns>
         public List<Tuple<string, int>> GetSequenceNames() {
+            throw new NotImplementedException();
 
-            //New list.
-            var ret = new List<Tuple<string, int>>();
-
-            //Get the start of the sequence table.
-            var sL = sequenceEditor.Lines.Where(x => x.Text.StartsWith("@SEQ_TABLE")).FirstOrDefault();
-            var sD = sequenceEditor.Lines.Where(x => x.Text.StartsWith("@SEQ_DATA")).FirstOrDefault();
-            if (sL == null || sD == null) {
-                return ret;
-            }
-            int seqTableStart = sL.Index;
-            int seqDataStart = sD.Index;
-
-            //Run through the list.
-            int ind = 0;
-            for (int i = seqTableStart + 1; i < seqDataStart; i++) {
-                string s = sequenceEditor.Lines[i].Text;
-                if (s.Contains(';')) { s = s.Substring(s.IndexOf(';')); }
-                s = s.Replace("\n", "").Replace(" ", "").Replace("\t", "").Replace("\r", "");
-                if (s.Equals("")) {
-                    continue;
-                }
-                s = s.Split(':')[0];
-                int num = ind;
-                if (s.Contains("=")) {
-                    num = int.Parse(s.Split('=')[1]);
-                    ind = num;
-                    s = s.Split('=')[0];
-                } else if (int.TryParse(s, out _)) {
-                    num = int.Parse(s);
-                    ind = num;
-                    s = "Sequence_" + ind;
-                }
-                ret.Add(new Tuple<string, int>(s, ind++));
-            }
-
-            //Return the list.
-            return ret;
+            // //New list.
+            // var ret = new List<Tuple<string, int>>();
+            //
+            // //Get the start of the sequence table.
+            // var sL = sequenceEditor.Lines.Where(x => x.Text.StartsWith("@SEQ_TABLE")).FirstOrDefault();
+            // var sD = sequenceEditor.Lines.Where(x => x.Text.StartsWith("@SEQ_DATA")).FirstOrDefault();
+            // if (sL == null || sD == null) {
+            //     return ret;
+            // }
+            // int seqTableStart = sL.Index;
+            // int seqDataStart = sD.Index;
+            //
+            // //Run through the list.
+            // int ind = 0;
+            // for (int i = seqTableStart + 1; i < seqDataStart; i++) {
+            //     string s = sequenceEditor.Lines[i].Text;
+            //     if (s.Contains(';')) { s = s.Substring(s.IndexOf(';')); }
+            //     s = s.Replace("\n", "").Replace(" ", "").Replace("\t", "").Replace("\r", "");
+            //     if (s.Equals("")) {
+            //         continue;
+            //     }
+            //     s = s.Split(':')[0];
+            //     int num = ind;
+            //     if (s.Contains("=")) {
+            //         num = int.Parse(s.Split('=')[1]);
+            //         ind = num;
+            //         s = s.Split('=')[0];
+            //     } else if (int.TryParse(s, out _)) {
+            //         num = int.Parse(s);
+            //         ind = num;
+            //         s = "Sequence_" + ind;
+            //     }
+            //     ret.Add(new Tuple<string, int>(s, ind++));
+            // }
+            //
+            // //Return the list.
+            // return ret;
         
         }
 
@@ -644,18 +339,6 @@ namespace NitroStudio2 {
             WritingInfo = false;
         }
 
-        private void scintilla_Insert(object sender, ModificationEventArgs e) {
-            // Only update line numbers if the number of lines changed
-            if (e.LinesAdded != 0)
-                UpdateLineNumbers(0, sequenceEditor.Lines.Count);
-        }
-
-        private void scintilla_Delete(object sender, ModificationEventArgs e) {
-            // Only update line numbers if the number of lines changed
-            if (e.LinesAdded != 0)
-                UpdateLineNumbers(0, sequenceEditor.Lines.Count);
-        }
-
         public override void newToolStripMenuItem_Click(object sender, EventArgs e) {
 
             //File open and can save test.
@@ -672,8 +355,6 @@ namespace NitroStudio2 {
             ExtFile = null;
             Text = EditorName + " - New " + ExtensionDescription + ".s" + Extension;
             UpdateNodes();
-            LoadSequenceText("New Sequence Archive");
-
         }
 
         public override void openToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -701,8 +382,6 @@ namespace NitroStudio2 {
 
                 //Update.
                 UpdateNodes();
-                LoadSequenceText(Path.GetFileNameWithoutExtension(path));
-
             }
 
         }
@@ -756,9 +435,6 @@ namespace NitroStudio2 {
                 //Read data.
                 File.Read(path);
 
-                //Update.
-                LoadSequenceText(name);
-
             } else {
                 sequenceEditor.Text = System.IO.File.ReadAllText(path);
             }
@@ -805,7 +481,6 @@ namespace NitroStudio2 {
             string name = SA.Name;
             File = (IOFile)Activator.CreateInstance(FileType);
             SA.RawData = new byte[0];
-            LoadSequenceText(name);
 
         }
 

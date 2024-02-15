@@ -3,8 +3,6 @@ using GotaSequenceLib.Playback;
 using GotaSoundIO.IO;
 using GotaSoundIO.Sound;
 using NitroFileLoader;
-using ScintillaNET;
-using ScintillaNET_FindReplaceDialog;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -29,7 +27,6 @@ namespace NitroStudio2 {
         public Sequence SEQ => File as Sequence;
         int prevLine = -1;
         bool prevLineBlank = true;
-        private FindReplace MyFindReplace;
         public bool PositionBarFree = true;
         public Timer Timer = new Timer();
 
@@ -110,8 +107,6 @@ namespace NitroStudio2 {
             track14Solo.Click += new EventHandler(Track14Solo);
             track15Solo.Click += new EventHandler(Track15Solo);
             Mixer.Volume = .75f;
-            sequenceEditor.Insert += scintilla_Insert;
-            sequenceEditor.Delete += scintilla_Delete;
             kermalisPlayButton.Click += new EventHandler(PlayClick);
             kermalisPauseButton.Click += new EventHandler(PauseClick);
             kermalisStopButton.Click += new EventHandler(StopClick);
@@ -120,21 +115,15 @@ namespace NitroStudio2 {
             kermalisPosition.MouseUp += new MouseEventHandler(PositionMouseUp);
             kermalisPosition.MouseDown += new MouseEventHandler(PositionMouseDown);
             FormClosing += new FormClosingEventHandler(SEClosing);
-            Load += new System.EventHandler(this.SequenceEditor_Load);
             seqEditorBankBox.ValueChanged += new EventHandler(BankBoxChanged);
             seqEditorBankComboBox.SelectedIndexChanged += new EventHandler(BankComboChanged);
             status.Text = "Editing A Sequence.";
-            MyFindReplace = new FindReplace();
-            MyFindReplace.Scintilla = sequenceEditor;
-            sequenceEditor.KeyDown += new KeyEventHandler(genericScintilla_KeyDown);
             splitContainer1.SplitterDistance += 20;
             Timer.Tick += PositionTick;
             Timer.Interval = 1000 / 30;
             Timer.Start();
             exportMidiButton.Click += new EventHandler(ExportMidi);
             exportWavButton.Click += new EventHandler(ExportWav);
-            //MyFindReplace.FindAllResults += MyFindReplace_FindAllResults;
-            MyFindReplace.KeyPressed += MyFindReplace_KeyPressed;
             if (MainWindow == null || MainWindow.SA == null) {
                 seqEditorBankComboBox.Enabled = false;
                 seqEditorBankBox.Enabled = false;
@@ -174,114 +163,6 @@ namespace NitroStudio2 {
         /// </summary>
         public override void DoInfoStuff() {}
 
-        private void MyFindReplace_KeyPressed(object sender, KeyEventArgs e) {
-            genericScintilla_KeyDown(sender, e);
-        }
-
-        private void MyFindReplace_FindAllResults(object sender, FindResultsEventArgs FindAllResults) {
-            // Pass on find results
-            //findAllResultsPanel1.UpdateFindAllResults(FindAllResults.FindReplace, FindAllResults.FindAllResults);
-        }
-
-        private void GotoButton_Click(object sender, EventArgs e) {
-            // Use the FindReplace Scintilla as this will change based on focus
-            GoTo MyGoTo = new GoTo(MyFindReplace.Scintilla);
-            MyGoTo.ShowGoToDialog();
-        }
-
-        /// <summary>
-		/// Key down event for each Scintilla. Tie each Scintilla to this event
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void genericScintilla_KeyDown(object sender, KeyEventArgs e) {
-            if (e.Control && e.KeyCode == Keys.F) {
-                MyFindReplace.ShowFind();
-                e.SuppressKeyPress = true;
-            } else if (e.Shift && e.KeyCode == Keys.F3) {
-                MyFindReplace.Window.FindPrevious();
-                e.SuppressKeyPress = true;
-            } else if (e.KeyCode == Keys.F3) {
-                MyFindReplace.Window.FindNext();
-                e.SuppressKeyPress = true;
-            } else if (e.Control && e.KeyCode == Keys.H) {
-                MyFindReplace.ShowReplace();
-                e.SuppressKeyPress = true;
-            } else if (e.Control && e.KeyCode == Keys.I) {
-                MyFindReplace.ShowIncrementalSearch();
-                e.SuppressKeyPress = true;
-            } else if (e.Control && e.KeyCode == Keys.G) {
-                GoTo MyGoTo = new GoTo((Scintilla)sender);
-                MyGoTo.ShowGoToDialog();
-                e.SuppressKeyPress = true;
-            }
-        }
-
-        /// <summary>
-        /// Enter event tied to each Scintilla that will share a FindReplace dialog.
-        /// Tie each Scintilla to this event.
-        /// </summary>
-        /// <param name="sender">The Scintilla receiving focus</param>
-        /// <param name="e"></param>
-        private void genericScintilla1_Enter(object sender, EventArgs e) {
-            MyFindReplace.Scintilla = (Scintilla)sender;
-        }
-
-        /// <summary>
-        /// Load the editor.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SequenceEditor_Load(object sender, EventArgs e) {
-
-            //Init style.
-            sequenceEditor.Dock = DockStyle.Fill;
-            sequenceEditor.WrapMode = WrapMode.None;
-            sequenceEditor.IndentationGuides = IndentView.LookBoth;
-            sequenceEditor.StyleResetDefault();
-            sequenceEditor.Styles[Style.Default].Font = "Consolas";
-            sequenceEditor.Styles[Style.Default].Size = 11;
-            sequenceEditor.Styles[Style.Default].BackColor = IntToColor(0x212121);
-            sequenceEditor.Styles[Style.Default].ForeColor = IntToColor(0xE7E7E7);
-            sequenceEditor.CaretForeColor = IntToColor(0xFFFFFF);
-            sequenceEditor.StyleClearAll();
-            sequenceEditor.ScrollWidth = 1;
-            sequenceEditor.ScrollWidthTracking = true;
-            sequenceEditor.Styles[Style.LineNumber].BackColor = IntToColor(BACK_COLOR);
-            sequenceEditor.Styles[Style.LineNumber].ForeColor = IntToColor(FORE_COLOR);
-            sequenceEditor.Styles[Style.IndentGuide].ForeColor = IntToColor(FORE_COLOR);
-            sequenceEditor.Styles[Style.IndentGuide].BackColor = IntToColor(BACK_COLOR);
-            sequenceEditor.Lexer = Lexer.Container;
-            sequenceEditor.StyleNeeded += new EventHandler<StyleNeededEventArgs>(this.SEQ_StyleNeeded);
-            //sequenceEditor.UpdateUI += new EventHandler<UpdateUIEventArgs>(this.SEQ_Changed);
-            sequenceEditor.TextChanged += new EventHandler(this.SEQ_ChangedText);
-            StyleSeq(0, sequenceEditor.Text.Length);
-            UpdateLineNumbers(0, sequenceEditor.Text.Length);
-        }
-
-        /// <summary>
-        /// Sequence changed text.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SEQ_ChangedText(object sender, EventArgs e) {
-
-            //Remove comment area.
-            string s = sequenceEditor.Lines[sequenceEditor.CurrentLine].Text;
-            if (s.Contains(";")) {
-                s = s.Split(';')[0];
-            }
-
-            //Remove spaces.
-            var ss = sequenceEditor.Lines[sequenceEditor.CurrentLine].Text.Replace(" ", "").Replace("\t", "").Replace("\r", "").Replace("\n", "");
-            if (sequenceEditor.CurrentLine != prevLine || (prevLineBlank != (ss.EndsWith(":") || ss == ""))) {
-                UpdateLineNumbers(sequenceEditor.CurrentLine, sequenceEditor.Lines.Count);
-                prevLine = sequenceEditor.CurrentLine;
-                prevLineBlank = (ss.EndsWith(":") || ss == "");
-            }
-
-        }
-
         /// <summary>
         /// Update sequence.
         /// </summary>
@@ -294,21 +175,6 @@ namespace NitroStudio2 {
                 UpdateNodes();
             } catch (Exception exe) { MessageBox.Show(exe.Message); }
 
-        }
-
-        /// <summary>
-        /// SEQ needs style.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SEQ_StyleNeeded(object sender, StyleNeededEventArgs e) {
-            var startPos = sequenceEditor.GetEndStyled();
-            var endPos = e.Position;
-
-            if (startPos >= 500) { startPos -= 500; } else { startPos = 0; }
-            if ((sequenceEditor.Text.Length - endPos) >= 500) { endPos += 500; } else { endPos = sequenceEditor.Text.Length; }
-
-            StyleSeq(startPos, endPos);
         }
 
         /// <summary>
@@ -449,7 +315,6 @@ namespace NitroStudio2 {
         public void LoadSequenceText(string name = "Sequence") {
 
             //Why not.
-            sequenceEditor.Margins[0].Type = MarginType.RightText;
             sequenceEditor.Margins[0].Width = 35;
 
             //File is not null.
@@ -501,9 +366,6 @@ namespace NitroStudio2 {
             }
             for (int i = startingAtLine; i < endingAtLine; i++) {
 
-                //Set style.
-                sequenceEditor.Lines[i].MarginStyle = Style.LineNumber;
-
                 //Remove comment area.
                 string s = sequenceEditor.Lines[i].Text;
                 if (s.Contains(";")) {
@@ -521,18 +383,6 @@ namespace NitroStudio2 {
 
             }
 
-        }
-
-        private void scintilla_Insert(object sender, ModificationEventArgs e) {
-            // Only update line numbers if the number of lines changed
-            if (e.LinesAdded != 0)
-                UpdateLineNumbers(0, sequenceEditor.Lines.Count);
-        }
-
-        private void scintilla_Delete(object sender, ModificationEventArgs e) {
-            // Only update line numbers if the number of lines changed
-            if (e.LinesAdded != 0)
-                UpdateLineNumbers(0, sequenceEditor.Lines.Count);
         }
 
         public override void newToolStripMenuItem_Click(object sender, EventArgs e) {

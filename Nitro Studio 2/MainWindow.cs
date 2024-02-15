@@ -513,18 +513,18 @@ namespace NitroStudio2 {
 
                 //Sequence.
                 if (tree.SelectedNode.Parent == tree.Nodes["sequences"]) {
-                    var e = SA.Sequences.Where(x => x.Index == GetIdFromNode(tree.SelectedNode)).FirstOrDefault();
-                    SequenceEditor ed = new SequenceEditor(e.File, this, e.Name);
-                    SetBankIndex(SA, ed.seqEditorBankComboBox, e.Bank == null ? e.ReadingBankId : (uint)e.Bank.Index);
-                    ed.seqEditorBankBox.Value = e.Bank == null ? e.ReadingBankId : (uint)e.Bank.Index;
-                    ed.Show();
+                    // var e = SA.Sequences.Where(x => x.Index == GetIdFromNode(tree.SelectedNode)).FirstOrDefault();
+                    // SequenceEditor ed = new SequenceEditor(e.File, this, e.Name);
+                    // SetBankIndex(SA, ed.seqEditorBankComboBox, e.Bank == null ? e.ReadingBankId : (uint)e.Bank.Index);
+                    // ed.seqEditorBankBox.Value = e.Bank == null ? e.ReadingBankId : (uint)e.Bank.Index;
+                    // ed.Show();
                 }
 
                 //Sequence archive.
                 else if (tree.SelectedNode.Parent == tree.Nodes["sequenceArchives"]) {
-                    var e = SA.SequenceArchives.Where(x => x.Index == GetIdFromNode(tree.SelectedNode)).FirstOrDefault();
-                    SequenceArchiveEditor ed = new SequenceArchiveEditor(e.File, this, e.Name);
-                    ed.Show();
+                    // var e = SA.SequenceArchives.Where(x => x.Index == GetIdFromNode(tree.SelectedNode)).FirstOrDefault();
+                    // SequenceArchiveEditor ed = new SequenceArchiveEditor(e.File, this, e.Name);
+                    // ed.Show();
                 }
 
                 //Bank.
@@ -2681,9 +2681,9 @@ namespace NitroStudio2 {
         /// Open a sequence archive file.
         /// </summary>
         public void OpenSeqArcFile(object sender, EventArgs e) {
-            var f = SA.SequenceArchives.Where(x => x.Index == GetIdFromNode(tree.SelectedNode)).FirstOrDefault();
-            SequenceArchiveEditor ed = new SequenceArchiveEditor(f.File, this, f.Name);
-            ed.Show();
+            // var f = SA.SequenceArchives.Where(x => x.Index == GetIdFromNode(tree.SelectedNode)).FirstOrDefault();
+            // SequenceArchiveEditor ed = new SequenceArchiveEditor(f.File, this, f.Name);
+            // ed.Show();
         }
 
         /// <summary>

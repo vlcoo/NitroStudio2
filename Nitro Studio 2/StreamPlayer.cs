@@ -17,7 +17,7 @@ namespace NitroStudio2 {
         public StreamPlayer(MainWindow m, string path, string name) {
             InitializeComponent();
             Text = "Stream Player - " + name + ".strm";
-            wmp.URL = path;
+            // wmp.URL = path;
             Path = path;
             MainWindow = m;
         }

@@ -40,12 +40,12 @@ namespace NitroStudio2 {
 
                     //Sound sequence.
                     case ".sseq":
-                        Application.Run(new SequenceEditor(args[0]));
+                        // Application.Run(new SequenceEditor(args[0]));
                         break;
 
                     //Sound archive.
                     case ".ssar":
-                        Application.Run(new SequenceArchiveEditor(args[0]));
+                        // Application.Run(new SequenceArchiveEditor(args[0]));
                         break;
 
                     //Sound bank.
