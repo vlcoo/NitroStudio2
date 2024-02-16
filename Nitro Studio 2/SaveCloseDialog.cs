@@ -1,57 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace NitroStudio2
+namespace NitroStudio2;
+
+public partial class SaveCloseDialog : Form
 {
-    public partial class SaveCloseDialog : Form
+    private int returnValue;
+
+    public SaveCloseDialog()
     {
-        public SaveCloseDialog()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        int returnValue = 0;
+    private void SaveCloseDialog_Load(object sender, EventArgs e)
+    {
+    }
 
-        private void SaveCloseDialog_Load(object sender, EventArgs e)
-        {
+    private void Window_Closing(object sender, CancelEventArgs e)
+    {
+    }
 
-        }
+    private void YesButton_Click(object sender, EventArgs e)
+    {
+        returnValue = 0;
+        Close();
+    }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-        }
+    private void NoButton_Click(object sender, EventArgs e)
+    {
+        returnValue = 1;
+        Close();
+    }
 
-        private void YesButton_Click(object sender, EventArgs e)
-        {
-            returnValue = 0;
-            this.Close();
-        }
-
-        private void NoButton_Click(object sender, EventArgs e)
-        {
-            returnValue = 1;
-            this.Close();
-        }
-
-        private void CancelButton_Click(object sender, EventArgs e)
-        {
-            returnValue = 2;
-            this.Close();
-        }
+    private void CancelButton_Click(object sender, EventArgs e)
+    {
+        returnValue = 2;
+        Close();
+    }
 
 
-        public int getValue() {
-
-            this.ShowDialog();
-            return returnValue;
-
-        }
+    public int getValue()
+    {
+        ShowDialog();
+        return returnValue;
     }
 }

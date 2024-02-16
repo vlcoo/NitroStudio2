@@ -1,43 +1,58 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace NitroStudio2 {
-    public partial class SaveQuitDialog : Form
+namespace NitroStudio2;
+
+public partial class SaveQuitDialog : Form
+{
+    private readonly EditorBase parentTwo;
+
+    public SaveQuitDialog(EditorBase parent2)
     {
+        InitializeComponent();
+        parentTwo = parent2;
+    }
 
-        EditorBase parentTwo;
+    private void SaveQuitDialog_Load(object sender, EventArgs e)
+    {
+    }
 
-        public SaveQuitDialog(EditorBase parent2)
+    private void CancelButton_Click(object sender, EventArgs e)
+    {
+        Close();
+    }
+
+    private void NoButton_Click(object sender, EventArgs e)
+    {
+        try
         {
-            InitializeComponent();
-            parentTwo = parent2;
+            parentTwo.Close();
+        }
+        catch
+        {
+        }
+    }
+
+    private void YesButton_Click(object sender, EventArgs e)
+    {
+        //Save application
+        //try { parent.save(); } catch { }
+        //try { parentTwo.save(); } catch { }
+        try
+        {
+            parentTwo.saveToolStripMenuItem_Click(sender, e);
+        }
+        catch
+        {
         }
 
-        private void SaveQuitDialog_Load(object sender, EventArgs e)
+        //Exit application
+        try
         {
-
+            parentTwo.Close();
         }
-
-        private void CancelButton_Click(object sender, EventArgs e)
+        catch
         {
-            this.Close();
-        }
-
-        private void NoButton_Click(object sender, EventArgs e)
-        {
-            try { parentTwo.Close(); } catch { }
-        }
-
-        private void YesButton_Click(object sender, EventArgs e)
-        {
-            //Save application
-            //try { parent.save(); } catch { }
-            //try { parentTwo.save(); } catch { }
-            try { parentTwo.saveToolStripMenuItem_Click(sender, e); } catch { }
-
-            //Exit application
-            try { parentTwo.Close(); } catch { }
-
         }
     }
 }
