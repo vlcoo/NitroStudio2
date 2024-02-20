@@ -1,9 +1,11 @@
 [submodule "GotaSoundIO"]
 	path = GotaSoundIO
 	url = https://github.com/vlcoo/GotaSoundIO
+	branch = master
 [submodule "GotaSoundBank"]
 	path = GotaSoundBank
 	url = https://github.com/vlcoo/GotaSoundBank
 [submodule "GotaSequenceLib"]
 	path = GotaSequenceLib
 	url = https://github.com/vlcoo/GotaSequenceLib
+	branch = master
