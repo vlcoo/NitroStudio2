@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Windows.Forms;
 using GotaSoundIO.Sound;
 using NitroFileLoader;
 using NitroStudio2.Properties;
@@ -8,7 +7,7 @@ using Stream = NitroFileLoader.Stream;
 
 namespace NitroStudio2;
 
-public partial class CreateStreamTool : Form
+public partial class CreateStreamTool
 {
     /// <summary>
     ///     Swav mode.
@@ -18,57 +17,28 @@ public partial class CreateStreamTool : Form
     public CreateStreamTool(bool swavMode)
     {
         InitializeComponent();
-        outputFormat.SelectedIndex = 2;
         SwavMode = swavMode;
-        if (SwavMode)
-        {
-            Text = "Create Wave";
-            Icon = Resources.Wav;
-        }
+        //if (SwavMode)
+        //{
+        //    Icon = Resources.Wav;
+        //}
     }
 
-    private void impFileButton_Click(object sender, EventArgs e)
-    {
-        var o = new OpenFileDialog();
-        o.RestoreDirectory = true;
-        o.Filter = "Supported Sound Files|*.wav;*.swav;*.strm";
-        o.ShowDialog();
-        if (o.FileName != "")
-        {
-            impFileBox.Text = o.FileName;
-            impFileBox.SelectionStart = outFileBox.Text.Length;
-            impFileBox.ScrollToCaret();
-            impFileBox.Refresh();
-        }
-    }
 
-    private void outFileButton_Click(object sender, EventArgs e)
-    {
-        var s = new SaveFileDialog();
-        s.RestoreDirectory = true;
-        s.Filter = SwavMode ? "Sound Wave|*.swav" : "Sound Stream|*.strm";
-        s.ShowDialog();
-        if (s.FileName != "")
-        {
-            outFileBox.Text = s.FileName;
-            outFileBox.SelectionStart = outFileBox.Text.Length;
-            outFileBox.ScrollToCaret();
-            outFileBox.Refresh();
-        }
-    }
-
-    private void exportButton_Click(object sender, EventArgs e)
+    private void exportStream(string inFilePath, string outFilePath, int outputFormat)
     {
         //Test.
-        if (impFileBox.Text.Equals(""))
+        if (inFilePath.Equals(""))
         {
-            MessageBox.Show("No Input File Selected!");
+            //MessageBox.Show("No Input File Selected!");
+            Console.WriteLine("No Input File Selected!");
             return;
         }
 
-        if (outFileBox.Text.Equals(""))
+        if (outFilePath.Equals(""))
         {
-            MessageBox.Show("No Output File Selected!");
+            //MessageBox.Show("No Output File Selected!");
+            Console.WriteLine("No Output File Selected!");
             return;
         }
 
@@ -81,7 +51,7 @@ public partial class CreateStreamTool : Form
 
         //Switch input file.
         SoundFile i;
-        switch (Path.GetExtension(impFileBox.Text))
+        switch (Path.GetExtension(inFilePath))
         {
             case ".swav":
                 i = new Wave();
@@ -94,11 +64,11 @@ public partial class CreateStreamTool : Form
                 break;
         }
 
-        i.Read(impFileBox.Text);
+        i.Read(inFilePath);
 
         //Get conversion type.
         Type convType;
-        switch (outputFormat.SelectedIndex)
+        switch (outputFormat)
         {
             case 0:
                 convType = typeof(PCM8Signed);
@@ -115,6 +85,6 @@ public partial class CreateStreamTool : Form
         s.FromOtherStreamFile(i, convType);
 
         //Save the file.
-        s.Write(outFileBox.Text);
+        s.Write(outFilePath);
     }
 }

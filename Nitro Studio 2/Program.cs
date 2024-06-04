@@ -68,6 +68,6 @@ internal static class Program
         else
             //Start the editor.
             //Application.Run(new MainWindow());
-            new Application(Eto.Platform.Detect).Run(new SequenceRecorder());
+            new Application(Eto.Platform.Detect).Run(new CreateStreamTool(true));
     }
 }
