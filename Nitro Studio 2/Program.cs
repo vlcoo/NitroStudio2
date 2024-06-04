@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Windows.Forms;
+//using System.Windows.Forms;
+using Eto.Forms;
 using GotaSoundIO.Sound;
 using Stream = NitroFileLoader.Stream;
 
@@ -11,7 +12,7 @@ internal static class Program
     /// <summary>
     ///     Path.
     /// </summary>
-    public static string NitroPath = Application.StartupPath;
+    public static string NitroPath = "";
 
     /// <summary>
     ///     The main entry point for the application.
@@ -20,8 +21,8 @@ internal static class Program
     private static void Main(string[] args)
     {
         //Start.
-        Application.EnableVisualStyles();
-        Application.SetCompatibleTextRenderingDefault(false);
+        //Application.EnableVisualStyles();
+        //Application.SetCompatibleTextRenderingDefault(false);
 
         //Argument mode.
         if (args.Length > 0)
@@ -30,7 +31,7 @@ internal static class Program
             {
                 //Sound archive.
                 case ".sdat":
-                    Application.Run(new MainWindow(args[0]));
+                    //Application.Run(new MainWindow(args[0]));
                     break;
 
                 //Sound sequence.
@@ -45,12 +46,12 @@ internal static class Program
 
                 //Sound bank.
                 case ".sbnk":
-                    Application.Run(new BankEditor(args[0]));
+                    //Application.Run(new BankEditor(args[0]));
                     break;
 
                 //Sound wave archive.
                 case ".swar":
-                    Application.Run(new WaveArchiveEditor(args[0]));
+                    //Application.Run(new WaveArchiveEditor(args[0]));
                     break;
 
                 //Stream.
@@ -60,12 +61,13 @@ internal static class Program
                     s.Read(args[0]);
                     r.FromOtherStreamFile(s);
                     r.Write(MainWindow.NitroPath + "/" + "tmpStream" + 0 + ".wav");
-                    Application.Run(new StreamPlayer(null, MainWindow.NitroPath + "/" + "tmpStream" + 0 + ".wav",
-                        Path.GetFileNameWithoutExtension(args[0])));
+                    //Application.Run(new StreamPlayer(null, MainWindow.NitroPath + "/" + "tmpStream" + 0 + ".wav",
+                        //Path.GetFileNameWithoutExtension(args[0])));
                     break;
             }
         else
             //Start the editor.
-            Application.Run(new MainWindow());
+            //Application.Run(new MainWindow());
+            new Application(Eto.Platform.Detect).Run(new SequenceRecorder());
     }
 }

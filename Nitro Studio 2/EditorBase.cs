@@ -7787,7 +7787,7 @@ public abstract class EditorBase : Form
         if (FileOpen)
         {
             var q = new SaveQuitDialog(this);
-            q.ShowDialog();
+            q.Show();
         }
         else
         {

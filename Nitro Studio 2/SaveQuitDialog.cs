@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Windows.Forms;
 
 namespace NitroStudio2;
 
-public partial class SaveQuitDialog : Form
+public partial class SaveQuitDialog
 {
     private readonly EditorBase parentTwo;
 

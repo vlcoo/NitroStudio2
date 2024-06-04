@@ -87,7 +87,15 @@
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0"/>
     </ItemGroup>
     <ItemGroup>
-        <Compile Remove="SequenceArchiveEditor.cs"/>
-        <Compile Remove="SequenceEditor.cs"/>
+        <Compile Remove="SaveCloseDialog.Designer.cs" />
+        <Compile Remove="SaveQuitDialog.Designer.cs" />
+        <Compile Remove="SequenceArchiveEditor.cs" />
+        <Compile Remove="SequenceEditor.cs" />
+        <Compile Remove="SequenceRecorder.Designer.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Include="SaveCloseDialog.Designer.cs" />
+      <None Include="SaveQuitDialog.Designer.cs" />
+      <None Include="SequenceRecorder.Designer.cs" />
     </ItemGroup>
 </Project>

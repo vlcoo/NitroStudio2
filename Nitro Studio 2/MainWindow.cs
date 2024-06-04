@@ -2349,7 +2349,7 @@ public class MainWindow : EditorBase
                         {
                             var rec = new SequenceRecorder(new PlayableBank[] { seq.Bank.File },
                                 seq.Bank.GetAssociatedWaves(), seq.File.Commands, 0, s.FileName);
-                            rec.ShowDialog();
+                            rec.Show();
                         }
                         catch
                         {
@@ -2374,7 +2374,7 @@ public class MainWindow : EditorBase
                             var rec = new SequenceRecorder(new PlayableBank[] { seq.Bank.File },
                                 seq.Bank.GetAssociatedWaves(), a.File.Commands,
                                 a.File.PublicLabels.Values.ElementAt(a.File.Sequences.IndexOf(seq)), s.FileName);
-                            rec.ShowDialog();
+                            rec.Show();
                         }
                         catch
                         {

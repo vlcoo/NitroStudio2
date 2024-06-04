@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using GotaSequenceLib;
 using GotaSequenceLib.Playback;
 using GotaSoundIO.Sound;
 
 namespace NitroStudio2;
 
-public partial class SequenceRecorder : Form
+public partial class SequenceRecorder
 {
     /// <summary>
     ///     Commands.
@@ -55,15 +54,20 @@ public partial class SequenceRecorder : Form
         this.filePath = filePath;
     }
 
+    public SequenceRecorder()
+    {
+        InitializeComponent();
+    }
+
     /// <summary>
     ///     Record the sequence.
     /// </summary>
-    private void exportButton_Click(object sender, EventArgs e)
+    private void exportSequence(double numLoops, bool? fade = false)
     {
         //Save.
         Player.LoadSong(commands, seqStart);
-        Player.NumLoops = (long)loopsBox.Value;
-        Player.DontFadeSong = !fadeBox.Checked;
+        Player.NumLoops = (long)numLoops;
+        Player.DontFadeSong = (bool)!fade;
         Player.Record(filePath);
         Close();
     }

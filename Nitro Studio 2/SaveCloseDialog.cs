@@ -1,10 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Windows.Forms;
 
 namespace NitroStudio2;
 
-public partial class SaveCloseDialog : Form
+public partial class SaveCloseDialog
 {
     private int returnValue;
 
@@ -42,7 +41,7 @@ public partial class SaveCloseDialog : Form
 
     public int getValue()
     {
-        ShowDialog();
+        Show();
         return returnValue;
     }
 }
