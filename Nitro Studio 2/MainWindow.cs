@@ -3128,7 +3128,7 @@ public class MainWindow : EditorBase
         }
 
         var wm = new WaveMapper(wavSamples, wars);
-        wm.ShowDialog();
+        wm.Show();
         var warMap = wm.WarMap;
         if (warMap == null) return;
 

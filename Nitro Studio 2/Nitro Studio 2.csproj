@@ -102,6 +102,7 @@
         <Compile Remove="SequenceArchiveEditor.cs" />
         <Compile Remove="SequenceEditor.cs" />
         <Compile Remove="SequenceRecorder.Designer.cs" />
+        <Compile Remove="WaveMapper.Designer.cs" />
     </ItemGroup>
     <ItemGroup>
       <None Remove="Resources\bank.ico" />
@@ -133,6 +134,7 @@
       <None Include="SaveCloseDialog.Designer.cs" />
       <None Include="SaveQuitDialog.Designer.cs" />
       <None Include="SequenceRecorder.Designer.cs" />
+      <None Include="WaveMapper.Designer.cs" />
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Include="Resources\bank.ico" />

@@ -188,8 +188,8 @@ public class NitroStudio2Instrument : IOFile
                 var riff = new RiffWave();
                 riff.FromOtherStreamFile(e.Wave);
                 var mapper = new WaveMapper(new List<RiffWave> { riff }, wars.Where(x => x != null).ToList(), true);
-                mapper.MinimizeBox = false;
-                mapper.ShowDialog();
+                mapper.Minimizable = false;
+                mapper.Show();
                 if (mapper.WarMap == null) return;
                 a.WaveArchives.Where(x => x.Index == mapper.WarMap[0]).FirstOrDefault().File.Waves.Add(e.Wave);
                 r.WaveId = (ushort)(a.WaveArchives.Where(x => x.Index == mapper.WarMap[0]).FirstOrDefault().File.Waves

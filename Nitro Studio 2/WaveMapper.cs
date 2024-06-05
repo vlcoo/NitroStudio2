@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using GotaSoundIO.Sound;
 using NitroFileLoader;
 
 namespace NitroStudio2;
 
-public partial class WaveMapper : Form
+public partial class WaveMapper
 {
     /// <summary>
     ///     Player.
@@ -23,65 +22,55 @@ public partial class WaveMapper : Form
     /// </summary>
     private readonly List<RiffWave> wavs = new();
 
+    private readonly List<WaveArchiveInfo> wars = new();
+
     /// <summary>
     ///     Bank importer.
     /// </summary>
-    /// <param name="waves">Waves.</param>
+    /// <param name="wavs">Waves.</param>
     /// <param name="wars">Wave archives.</param>
-    public WaveMapper(List<RiffWave> waves, List<WaveArchiveInfo> wars, bool hideId = false)
+    public WaveMapper(List<RiffWave> wavs, List<WaveArchiveInfo> wars, bool hideId = false)
     {
         //Check.
         if (wars.Count < 1)
         {
-            MessageBox.Show("The target bank must be hooked up to at least one wave archive.");
+            //MessageBox.Show("The target bank must be hooked up to at least one wave archive.");
+            Console.WriteLine("The target bank must be hooked up to at least one wave archive.");
             Close();
             return;
         }
 
-        //Init.
-        InitializeComponent();
-        mapGrid.CellContentClick += PlayRegionButtonClick;
-        if (hideId) mapGrid.Columns[1].Visible = false;
-        FormClosing += OnClosing;
-
-        //Wave archive index.
-        foreach (var w in wars) waveArchive.Items.Add("[" + w.Index + "] " + w.Name);
+        //if (hideId) mapGrid.Columns[1].Visible = false;
 
         //Add waves.
-        var num = 0;
-        wavs = waves;
-        foreach (var wav in waves)
-        {
-            mapGrid.Rows.Add(new DataGridViewRow());
-            var v = mapGrid.Rows[mapGrid.Rows.Count - 1];
-            ((DataGridViewTextBoxCell)v.Cells[1]).Value = num++;
-            ((DataGridViewComboBoxCell)v.Cells[2]).Value = waveArchive.Items[0];
-        }
+        this.wavs = wavs;
+        this.wars = wars;
+
+        InitializeComponent();
+    }
+
+    public WaveMapper()
+    {
+        InitializeComponent();
     }
 
     /// <summary>
     ///     Finished.
     /// </summary>
-    private void finishedButton_Click(object sender, EventArgs e)
+    private void SetWarMap(List<ushort> map)
     {
-        WarMap = new List<ushort>();
-        foreach (DataGridViewRow r in mapGrid.Rows)
-        {
-            var s = (string)((DataGridViewComboBoxCell)r.Cells[2]).Value;
-            WarMap.Add(ushort.Parse(s.Split(']')[0].Split('[')[1]));
-        }
-
+        WarMap = map;
         Close();
     }
 
     /// <summary>
     ///     Play region button.
     /// </summary>
-    public void PlayRegionButtonClick(object sender, DataGridViewCellEventArgs e)
+    public void PlayWave(int id)
     {
-        if (e.ColumnIndex != 0 || e.RowIndex < 0) return;
+        if (id < 0) return;
         Player.Stop();
-        Player.LoadStream(wavs[e.RowIndex]);
+        Player.LoadStream(wavs[id]);
         Player.Play();
     }
 
