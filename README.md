@@ -1,14 +1,9 @@
-# Nitro Studio 2
-If Nitro Studio was so good, why isn't there a Nitro Studio 2? Well it was so good so now there's a 2nd one that's even better. It's a lot easier to use over the original and has a ton of new features! Try it out!
+This is a **work-in-progress** attempt of making [Gota7's Nitro Studio 2](https://github.com/Gota7/NitroStudio2/) cross-platform! It's **not usable** quite yet.
 
-# Dependencies
-This tool requires my SoundIO, Sound Bank and Sequence libraries.
+## Main Goals
+- Migrate to a newer .NET platform that will support more than Windows-only builds.
+- Port the GUI from WinForms to [Eto](https://github.com/picoe/Eto).
+- See if more stuff needs to be added.
 
-SoundIO: https://github.com/Gota7/GotaSoundIO
-
-Sound Bank: https://github.com/Gota7/GotaSoundBank
-
-Sequence Lib: https://github.com/Gota7/GotaSequenceLib
-
-Please see the website here:
-https://gota7.github.io/NitroStudio2/
+## Dependencies
+This program uses some dependencies that live in their own repos (which they've also been forked). They're included as git submodules.
