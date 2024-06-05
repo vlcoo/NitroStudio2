@@ -16,12 +16,8 @@ public partial class CreateStreamTool
 
     public CreateStreamTool(bool swavMode)
     {
-        InitializeComponent();
         SwavMode = swavMode;
-        //if (SwavMode)
-        //{
-        //    Icon = Resources.Wav;
-        //}
+        InitializeComponent();
     }
 
 

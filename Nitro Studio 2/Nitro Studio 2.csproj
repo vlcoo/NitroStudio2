@@ -5,11 +5,12 @@
         <RootNamespace>NitroStudio2</RootNamespace>
         <LangVersion>default</LangVersion>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-        <UseWindowsForms>true</UseWindowsForms>
         <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     </PropertyGroup>
     <PropertyGroup>
         <ApplicationIcon>icon.ico</ApplicationIcon>
+        <UseWindowsForms>True</UseWindowsForms>
+        <UseWPF>False</UseWPF>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="SoundFont2">
@@ -20,15 +21,20 @@
         <Compile Update="PianoKey.cs">
             <SubType>Component</SubType>
         </Compile>
+        <Compile Update="Properties\Settings.Designer.cs">
+          <DesignTimeSharedInput>True</DesignTimeSharedInput>
+          <AutoGen>True</AutoGen>
+          <DependentUpon>Settings.settings</DependentUpon>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\GotaSequenceLib\GotaSequenceLib.csproj"/>
-        <ProjectReference Include="..\GotaSoundBank\GotaSoundBank.csproj"/>
-        <ProjectReference Include="..\GotaSoundIO\GotaSoundIO.csproj"/>
-        <ProjectReference Include="..\NitroFileLoader\NitroFileLoader.csproj"/>
+        <ProjectReference Include="..\GotaSequenceLib\GotaSequenceLib.csproj" />
+        <ProjectReference Include="..\GotaSoundBank\GotaSoundBank.csproj" />
+        <ProjectReference Include="..\GotaSoundIO\GotaSoundIO.csproj" />
+        <ProjectReference Include="..\NitroFileLoader\NitroFileLoader.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <WCFMetadata Include="Connected Services\"/>
+        <WCFMetadata Include="Connected Services\" />
     </ItemGroup>
     <ItemGroup>
         <Content Include="AxInterop.WMPLib.dll">
@@ -61,7 +67,7 @@
         <Content Include="Hardware\WhiteNoise.wav">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="icon.ico"/>
+        <Content Include="icon.ico" />
         <Content Include="Interop.WMPLib.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
@@ -79,14 +85,18 @@
         </Content>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.CSharp" Version="4.7.0"/>
-        <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0"/>
-        <PackageReference Include="System.ComponentModel.Composition" Version="8.0.0"/>
-        <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="1.3.0"/>
-        <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0"/>
+        <PackageReference Include="Eto.Forms" Version="2.8.3" />
+        <PackageReference Include="Eto.Platform.Gtk" Version="2.8.3" />
+        <PackageReference Include="Eto.Platform.Wpf" Version="2.8.3" />
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+        <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
+        <PackageReference Include="System.ComponentModel.Composition" Version="8.0.0" />
+        <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+        <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="1.3.0" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Remove="CreateStreamTool.Designer.cs" />
         <Compile Remove="SaveCloseDialog.Designer.cs" />
         <Compile Remove="SaveQuitDialog.Designer.cs" />
         <Compile Remove="SequenceArchiveEditor.cs" />
@@ -94,8 +104,67 @@
         <Compile Remove="SequenceRecorder.Designer.cs" />
     </ItemGroup>
     <ItemGroup>
+      <None Remove="Resources\bank.ico" />
+      <None Remove="Resources\bank.png" />
+      <None Remove="Resources\close.png" />
+      <None Remove="Resources\export.png" />
+      <None Remove="Resources\Ico.png" />
+      <None Remove="Resources\icon.ico" />
+      <None Remove="Resources\icon.png" />
+      <None Remove="Resources\Idle.png" />
+      <None Remove="Resources\import.png" />
+      <None Remove="Resources\Mute.png" />
+      <None Remove="Resources\new.png" />
+      <None Remove="Resources\NoteDown.png" />
+      <None Remove="Resources\nsm.png" />
+      <None Remove="Resources\open.png" />
+      <None Remove="Resources\quitter.png" />
+      <None Remove="Resources\rename.png" />
+      <None Remove="Resources\save.png" />
+      <None Remove="Resources\saveAs.png" />
+      <None Remove="Resources\sseq.ico" />
+      <None Remove="Resources\stream.ico" />
+      <None Remove="Resources\War.ico" />
+      <None Remove="Resources\wave.ico" />
+      <None Remove="Resources\waveArchive.ico" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Include="CreateStreamTool.Designer.cs" />
       <None Include="SaveCloseDialog.Designer.cs" />
       <None Include="SaveQuitDialog.Designer.cs" />
       <None Include="SequenceRecorder.Designer.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\bank.ico" />
+      <EmbeddedResource Include="Resources\bank.png" />
+      <EmbeddedResource Include="Resources\close.png" />
+      <EmbeddedResource Include="Resources\export.png" />
+      <EmbeddedResource Include="Resources\Ico.png" />
+      <EmbeddedResource Include="Resources\icon.ico" />
+      <EmbeddedResource Include="Resources\icon.png" />
+      <EmbeddedResource Include="Resources\Idle.png" />
+      <EmbeddedResource Include="Resources\import.png" />
+      <EmbeddedResource Include="Resources\Mute.png" />
+      <EmbeddedResource Include="Resources\new.png" />
+      <EmbeddedResource Include="Resources\NoteDown.png" />
+      <EmbeddedResource Include="Resources\nsm.png" />
+      <EmbeddedResource Include="Resources\open.png" />
+      <EmbeddedResource Include="Resources\quitter.png" />
+      <EmbeddedResource Include="Resources\rename.png" />
+      <EmbeddedResource Include="Resources\save.png" />
+      <EmbeddedResource Include="Resources\saveAs.png" />
+      <EmbeddedResource Include="Resources\sseq.ico" />
+      <EmbeddedResource Include="Resources\stream.ico" />
+      <EmbeddedResource Include="Resources\War.ico" />
+      <EmbeddedResource Include="Resources\wave.ico">
+        <CopyToOutputDirectory></CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Resources\waveArchive.ico" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Update="Properties\Settings.settings">
+        <Generator>SettingsSingleFileGenerator</Generator>
+        <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      </None>
     </ItemGroup>
 </Project>

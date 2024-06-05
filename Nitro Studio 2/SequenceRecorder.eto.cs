@@ -10,8 +10,9 @@ namespace NitroStudio2
             Title = "Sequence Recorder";
             Size = new Size(368, 120);
             Padding = 10;
+            Icon = Icon.FromResource("NitroStudio2.Resources.wave.ico");
 
-            var loopsBox = new NumericUpDown
+            var loopsBox = new NumericStepper
             {
                 MinValue = 1
             };

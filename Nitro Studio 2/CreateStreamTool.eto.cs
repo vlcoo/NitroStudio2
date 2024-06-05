@@ -10,6 +10,7 @@ namespace NitroStudio2
             Title = SwavMode ? "Create Wave" : "Create Stream";
             Size = new Size(430, 250);
             Padding = 10;
+            Icon = SwavMode ? Icon.FromResource("NitroStudio2.Resources.wave.ico") : Icon.FromResource("NitroStudio2.Resources.stream.ico");
 
             var inFileBox = new TextBox();
             var inFileButton = new Button
@@ -22,7 +23,7 @@ namespace NitroStudio2
                 {
                     Filters =
                     {
-                        "Supported Sound Files|*.*,*.swav,*.strm"
+                        "Supported Sound Files|*.wav;*.swav;*.strm"
                     }
                 };
                 o.ShowDialog(this);
@@ -42,7 +43,7 @@ namespace NitroStudio2
                 {
                     Filters =
                     {
-                        SwavMode ? "Sound Wave|*.*" : "Sound Stream|*.strm"
+                        SwavMode ? "Sound Wave|*.swav" : "Sound Stream|*.strm"
                     }
                 };
                 o.ShowDialog(this);
