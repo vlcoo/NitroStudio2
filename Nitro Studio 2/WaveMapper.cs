@@ -13,16 +13,19 @@ public partial class WaveMapper
     public GotaSoundIO.Sound.Playback.StreamPlayer Player = new();
 
     /// <summary>
-    ///     Wave archives.
+    ///     Wave to archive mapping.
     /// </summary>
     public List<ushort> WarMap;
 
     /// <summary>
     ///     Waves.
     /// </summary>
-    private readonly List<RiffWave> wavs = new();
+    private readonly List<RiffWave> wavs;
 
-    private readonly List<WaveArchiveInfo> wars = new();
+    /// <summary>
+    ///     Wave archives.
+    /// </summary>
+    private readonly List<WaveArchiveInfo> wars;
 
     /// <summary>
     ///     Bank importer.
@@ -45,6 +48,7 @@ public partial class WaveMapper
         //Add waves.
         this.wavs = wavs;
         this.wars = wars;
+        WarMap = new(wavs.Count);
 
         InitializeComponent();
     }
@@ -55,22 +59,13 @@ public partial class WaveMapper
     }
 
     /// <summary>
-    ///     Finished.
-    /// </summary>
-    private void SetWarMap(List<ushort> map)
-    {
-        WarMap = map;
-        Close();
-    }
-
-    /// <summary>
     ///     Play region button.
     /// </summary>
-    public void PlayWave(int id)
+    public void PlayWave(RiffWave wave)
     {
-        if (id < 0) return;
+        if (!wavs.Contains(wave)) return;
         Player.Stop();
-        Player.LoadStream(wavs[id]);
+        Player.LoadStream(wave);
         Player.Play();
     }
 

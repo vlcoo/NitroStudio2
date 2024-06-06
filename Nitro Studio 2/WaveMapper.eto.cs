@@ -1,96 +1,81 @@
 ﻿using Eto.Forms;
 using Eto.Drawing;
 using System.Linq;
+using GotaSoundIO.Sound;
 using System;
-using NitroFileLoader;
 
 namespace NitroStudio2
 {
     partial class WaveMapper : Form
-    {
+    { 
         void InitializeComponent()
         {
             Title = "Wave Mapper";
             Size = new Size(570, 340);
             Padding = 10;
             Icon = Icon.FromResource("NitroStudio2.Resources.wave.ico");
-            
-            var mapGrid = new GridView
+
+            var warDropdownOptions = wars.Select(w => $"[{w.Index}] {w.Name}").ToList();
+
+            Func<int, DropDown> warDropdown = (index) =>
             {
-                Columns =
+                var e = new DropDown();
+                e.DataStore = warDropdownOptions;
+                e.SelectedIndex = 0;
+                e.SelectedIndexChanged += (s, ev) =>
                 {
-                    new GridColumn
+                    WarMap[index] = (ushort)e.SelectedIndex;
+                };
+                return e;
+            };
+
+            var finishedButton = new Button((s, e) => Close())
+            {
+                Text = "Finished"
+            };
+
+            // Had to use a TableLayout because the more appropriate GridView was
+            // way too cumbersome to set up (I couldn't figure it out unfortunately).
+            var mapTable = new TableLayout
+            {
+                Rows =
+                {
+                    new TableRow
                     {
-                        HeaderText = "Play Sample",
-                        DataCell = new CustomCell 
+                        Cells =
                         {
-                            CreateCell = c =>
-                            {
-                                var e = new Button
-                                {
-                                    Text = "Play"
-                                };
-                                e.Click += (s, e) => PlayWave(c.Row);
-                                return e;
-                            }
-                        }
-                    },
-                    new GridColumn
-                    {
-                        HeaderText = "Wave ID",
-                        DataCell = new TextBoxCell
-                        {
-                            Binding = Binding.Property<string>("wavID")
-                        }
-                    },
-                    new GridColumn
-                    {
-                        HeaderText = "Wave Archive",
-                        DataCell = new CustomCell()
-                        {
-                            CreateCell = c =>
-                            {
-                                var e = new ComboBox();
-                                foreach (var war in wars) 
-                                    e.Items.Add($"[{war.Index}] {war.Name}");
-                                e.SelectedIndex = 0;
-                                e.SelectedIndexBinding.BindDataContext("warID");
-                                return e;
-                            }
+                            "Play Sample", "Wave ID", "Wave Archive"
                         }
                     }
                 }
             };
 
             var num = 0;
-            foreach (var wav in wavs)
+            foreach (RiffWave wav in wavs)
             {
-                mapGrid.DataStore.Append(new { ID = num++, WaveArchive = wav });
+                mapTable.Rows.Add(new TableRow
+                {
+                    Cells =
+                    {
+                        new Button((s, e) => PlayWave(wav))
+                        {
+                            Text = "Play",
+                        },
+                        $"{num}",
+                        warDropdown(num++)
+                    }
+                });
             }
 
-            var finishedButton = new Button
+            Content = new Scrollable
             {
-                Text = "Finished"
-            };
-            finishedButton.Click += (s, e) =>
-            {
-                //foreach (DataGridViewRow r in mapGrid.Rows)
-                //{
-                //    var s = (string)((DataGridViewComboBoxCell)r.Cells[2]).Value;
-                //    WarMap.Add(ushort.Parse(s.Split(']')[0].Split('[')[1]));
-                //}
-                foreach (var row in mapGrid.DataStore)
+                Content = new StackLayout
                 {
-                    // ...
-                }
-            };
-
-            Content = new StackLayout
-            {
-                Items =
-                {
-                    mapGrid,
-                    finishedButton
+                    Items =
+                    {
+                        mapTable, 
+                        finishedButton
+                    }
                 }
             };
 
