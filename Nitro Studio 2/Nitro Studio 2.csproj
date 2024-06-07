@@ -96,13 +96,19 @@
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Remove="BankGenerator.Designer.cs" />
         <Compile Remove="CreateStreamTool.Designer.cs" />
+        <Compile Remove="Instrument Selector.Designer.cs" />
+        <Compile Remove="InstrumentSelector.Designer.cs" />
         <Compile Remove="SaveCloseDialog.Designer.cs" />
         <Compile Remove="SaveQuitDialog.Designer.cs" />
         <Compile Remove="SequenceArchiveEditor.cs" />
         <Compile Remove="SequenceEditor.cs" />
         <Compile Remove="SequenceRecorder.Designer.cs" />
         <Compile Remove="WaveMapper.Designer.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Remove="Instrument Selector.resx" />
     </ItemGroup>
     <ItemGroup>
       <None Remove="Resources\bank.ico" />
@@ -130,7 +136,9 @@
       <None Remove="Resources\waveArchive.ico" />
     </ItemGroup>
     <ItemGroup>
+      <None Include="BankGenerator.Designer.cs" />
       <None Include="CreateStreamTool.Designer.cs" />
+      <None Include="InstrumentSelector.Designer.cs" />
       <None Include="SaveCloseDialog.Designer.cs" />
       <None Include="SaveQuitDialog.Designer.cs" />
       <None Include="SequenceRecorder.Designer.cs" />

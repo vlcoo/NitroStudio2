@@ -29,11 +29,6 @@ namespace NitroStudio2
                 return e;
             };
 
-            var finishedButton = new Button((s, e) => Close())
-            {
-                Text = "Finished"
-            };
-
             // Had to use a TableLayout because the more appropriate GridView was
             // way too cumbersome to set up (I couldn't figure it out unfortunately).
             var mapTable = new TableLayout
@@ -48,6 +43,11 @@ namespace NitroStudio2
                         }
                     }
                 }
+            };
+
+            var finishedButton = new Button((s, e) => Close())
+            {
+                Text = "Finished"
             };
 
             var num = 0;

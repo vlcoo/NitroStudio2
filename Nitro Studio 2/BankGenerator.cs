@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Windows.Forms;
 using GotaSequenceLib;
 using GotaSequenceLib.Playback;
 using NitroFileLoader;
@@ -12,7 +12,7 @@ namespace NitroStudio2;
 /// <summary>
 ///     Bank generator.
 /// </summary>
-public partial class BankGenerator : Form
+public partial class BankGenerator
 {
     /// <summary>
     ///     Main window.
@@ -43,35 +43,21 @@ public partial class BankGenerator : Form
         MainWindow = m;
         if (SA.Banks.Where(x => x.File.Instruments.Count > 0).Count() < 1)
         {
-            MessageBox.Show("There must be at least one bank that has an instrument.");
+            //MessageBox.Show("There must be at least one bank that has an instrument.");
+            Console.WriteLine("There must be at least one bank that has an instrument.");
             Close();
             return;
         }
-
-        PopulateBankBox(SA, instruments.Columns["bank"] as DataGridViewComboBoxColumn);
         instruments.CellValueChanged += InstrumentsChanged;
         instruments.RowsRemoved += InstrumentsChanged;
         instruments.CellContentClick += PlayRegionButtonClick;
         Player = new Player(Mixer);
-        FormClosing += OnClosing;
     }
 
     /// <summary>
     ///     Sound archive.
     /// </summary>
     public SoundArchive SA => MainWindow.SA;
-
-    /// <summary>
-    ///     Populate a combo box with banks.
-    /// </summary>
-    /// <param name="a">The sound archive.</param>
-    /// <param name="c">The combo box.</param>
-    public static void PopulateBankBox(SoundArchive a, DataGridViewComboBoxColumn c)
-    {
-        c.Items.Clear();
-        foreach (var w in a.Banks.Where(x => x.File.Instruments.Count > 0))
-            c.Items.Add("[" + w.Index + "] - " + w.Name);
-    }
 
     /// <summary>
     ///     Populate an instrument box.

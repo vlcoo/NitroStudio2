@@ -3093,7 +3093,7 @@ public class MainWindow : EditorBase
 
         //Get instruments.
         var sel = new InstrumentSelector(wavSamples, instIds, instNames);
-        sel.ShowDialog();
+        sel.Show();
         instIds = sel.SelectedInstruments;
         if (instIds == null) return;
 
