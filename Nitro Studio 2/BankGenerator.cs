@@ -39,8 +39,8 @@ public partial class BankGenerator
     /// </summary>
     public BankGenerator(MainWindow m)
     {
-        InitializeComponent();
         MainWindow = m;
+        InitializeComponent();
         if (SA.Banks.Where(x => x.File.Instruments.Count > 0).Count() < 1)
         {
             //MessageBox.Show("There must be at least one bank that has an instrument.");
@@ -48,9 +48,9 @@ public partial class BankGenerator
             Close();
             return;
         }
-        instruments.CellValueChanged += InstrumentsChanged;
-        instruments.RowsRemoved += InstrumentsChanged;
-        instruments.CellContentClick += PlayRegionButtonClick;
+        instrumentsGrid.CellValueChanged += InstrumentsChanged;
+        instrumentsGrid.RowsRemoved += InstrumentsChanged;
+        instrumentsGrid.CellContentClick += PlayRegionButtonClick;
         Player = new Player(Mixer);
     }
 
@@ -58,26 +58,6 @@ public partial class BankGenerator
     ///     Sound archive.
     /// </summary>
     public SoundArchive SA => MainWindow.SA;
-
-    /// <summary>
-    ///     Populate an instrument box.
-    /// </summary>
-    /// <param name="b">The bank.</param>
-    /// <param name="c">The combo box.</param>
-    public static void PopulateInstrumentBox(Bank b, DataGridViewComboBoxCell c, bool setFirst = false)
-    {
-        if (!setFirst)
-        {
-            c.Items.Clear();
-            foreach (var i in b.Instruments) c.Items.Add("[" + i.Index + "] - " + i.Type());
-        }
-        else
-        {
-            c.Items[0] = "[" + b.Instruments[0].Index + "] - " + b.Instruments[0].Type();
-            for (var i = 1; i < b.Instruments.Count; i++)
-                c.Items.Add("[" + b.Instruments[i].Index + "] - " + b.Instruments[i].Type());
-        }
-    }
 
     /// <summary>
     ///     Instruments changed.
@@ -95,21 +75,21 @@ public partial class BankGenerator
         ids.Add(-1);
 
         //For each instrument.
-        for (var i = 1; i < instruments.Rows.Count; i++)
+        for (var i = 1; i < instrumentsGrid.Rows.Count; i++)
         {
             //Get the cells.
-            var bankCell = (DataGridViewComboBoxCell)instruments.Rows[i - 1].Cells["bank"];
-            var instCell = (DataGridViewComboBoxCell)instruments.Rows[i - 1].Cells["instrument"];
-            var idCell = (DataGridViewTextBoxCell)instruments.Rows[i - 1].Cells["newId"];
-            var warModeCell = (DataGridViewComboBoxCell)instruments.Rows[i - 1].Cells["waveArchiveMode"];
+            var bankCell = (DataGridViewComboBoxCell)instrumentsGrid.Rows[i - 1].Cells["bank"];
+            var instCell = (DataGridViewComboBoxCell)instrumentsGrid.Rows[i - 1].Cells["instrument"];
+            var idCell = (DataGridViewTextBoxCell)instrumentsGrid.Rows[i - 1].Cells["newId"];
+            var warModeCell = (DataGridViewComboBoxCell)instrumentsGrid.Rows[i - 1].Cells["waveArchiveMode"];
 
             //Test.
             if (bankCell.Value == null)
-                bankCell.Value = (instruments.Columns["bank"] as DataGridViewComboBoxColumn).Items[0];
-            if (instCell.Items.Count < 1)
-                PopulateInstrumentBox(
-                    SA.Banks.Where(x => x.Index == int.Parse(((string)bankCell.Value).Split('[')[1].Split(']')[0]))
-                        .FirstOrDefault().File, instCell);
+                bankCell.Value = (instrumentsGrid.Columns["bank"] as DataGridViewComboBoxColumn).Items[0];
+            if (instCell.Items.Count < 1) { }
+                //PopulateInstrumentBox(
+                //    SA.Banks.Where(x => x.Index == int.Parse(((string)bankCell.Value).Split('[')[1].Split(']')[0]))
+                //        .FirstOrDefault().File, instCell);
             var instBak = "";
             try
             {
@@ -122,9 +102,9 @@ public partial class BankGenerator
             instCell.Value = instCell.Items[0];
             while (instCell.Items.Count > 1) instCell.Items.RemoveAt(instCell.Items.Count - 1);
             if (instBak == null) instBak = "";
-            PopulateInstrumentBox(
-                SA.Banks.Where(x => x.Index == int.Parse(((string)bankCell.Value).Split('[')[1].Split(']')[0]))
-                    .FirstOrDefault().File, instCell, true);
+            //PopulateInstrumentBox(
+            //    SA.Banks.Where(x => x.Index == int.Parse(((string)bankCell.Value).Split('[')[1].Split(']')[0]))
+            //        .FirstOrDefault().File, instCell, true);
             if (instCell.Items.Contains(instBak))
                 instCell.Value = instBak;
             else
@@ -150,7 +130,7 @@ public partial class BankGenerator
             }
 
             if (warModeCell.Value == null)
-                warModeCell.Value = (instruments.Columns["waveArchiveMode"] as DataGridViewComboBoxColumn).Items[0];
+                warModeCell.Value = (instrumentsGrid.Columns["waveArchiveMode"] as DataGridViewComboBoxColumn).Items[0];
 
             //Set war mode cell values.
             var warModeSecond = warModeCell.Value != warModeCell.Items[0];
@@ -207,13 +187,13 @@ public partial class BankGenerator
         //Get each instrument.
         var insts = new List<InstrumentInfo>();
         var wars = new List<string>();
-        for (var i = 0; i < instruments.Rows.Count - 1; i++)
+        for (var i = 0; i < instrumentsGrid.Rows.Count - 1; i++)
         {
             //Get the cells.
-            var bankCell = (DataGridViewComboBoxCell)instruments.Rows[i].Cells["bank"];
-            var instCell = (DataGridViewComboBoxCell)instruments.Rows[i].Cells["instrument"];
-            var idCell = (DataGridViewTextBoxCell)instruments.Rows[i].Cells["newId"];
-            var warModeCell = (DataGridViewComboBoxCell)instruments.Rows[i].Cells["waveArchiveMode"];
+            var bankCell = (DataGridViewComboBoxCell)instrumentsGrid.Rows[i].Cells["bank"];
+            var instCell = (DataGridViewComboBoxCell)instrumentsGrid.Rows[i].Cells["instrument"];
+            var idCell = (DataGridViewTextBoxCell)instrumentsGrid.Rows[i].Cells["newId"];
+            var warModeCell = (DataGridViewComboBoxCell)instrumentsGrid.Rows[i].Cells["waveArchiveMode"];
 
             //Check.
             if (bankCell.Value == null || instCell.Value == null || idCell.Value == null ||
@@ -231,7 +211,7 @@ public partial class BankGenerator
                 .FirstOrDefault();
             var id = int.Parse(idCell.Value.ToString());
             var useExistingWar = warModeCell.Value !=
-                                 ((DataGridViewComboBoxColumn)instruments.Columns["waveArchiveMode"]).Items[0];
+                                 ((DataGridViewComboBoxColumn)instrumentsGrid.Columns["waveArchiveMode"]).Items[0];
 
             //Add the instrument.
             insts.Add(new InstrumentInfo
@@ -406,8 +386,8 @@ public partial class BankGenerator
         try
         {
             Player.Stop();
-            var bnkCell = (DataGridViewComboBoxCell)instruments.Rows[e.RowIndex].Cells["bank"];
-            var instCell = (DataGridViewComboBoxCell)instruments.Rows[e.RowIndex].Cells["instrument"];
+            var bnkCell = (DataGridViewComboBoxCell)instrumentsGrid.Rows[e.RowIndex].Cells["bank"];
+            var instCell = (DataGridViewComboBoxCell)instrumentsGrid.Rows[e.RowIndex].Cells["instrument"];
             var bnk = SA.Banks.Where(x => x.Index == int.Parse(((string)bnkCell.Value).Split('[')[1].Split(']')[0]))
                 .FirstOrDefault();
             var inst = bnk.File.Instruments

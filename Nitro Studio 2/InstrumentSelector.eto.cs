@@ -7,27 +7,27 @@ namespace NitroStudio2
 {
     partial class InstrumentSelector : Form
     {
+        CheckBox selectedCheckbox(int index)
+        {
+            var e = new CheckBox();
+            e.Checked = true;
+            e.ThreeState = false;
+            e.ID = $"check{index}";
+            e.CheckedChanged += (s, ev) =>
+            {
+                if ((bool)e.Checked && !SelectedInstruments.Contains(index))
+                    SelectedInstruments.Add(index);
+                else if (!(bool)e.Checked && SelectedInstruments.Contains(index))
+                    SelectedInstruments.Remove(index);
+            };
+            return e;
+        }
+
         void InitializeComponent()
         {
             Title = "Instrument Selector";
             Size = new Size(632, 420);
             Padding = 10;
-
-            Func<int, CheckBox> selectedCheckbox = (index) =>
-            {
-                var e = new CheckBox();
-                e.Checked = true;
-                e.ThreeState = false;
-                e.ID = $"check{index}";
-                e.CheckedChanged += (s, ev) =>
-                {
-                    if ((bool)e.Checked && !SelectedInstruments.Contains(index))
-                        SelectedInstruments.Add(index);
-                    else if (!(bool)e.Checked && SelectedInstruments.Contains(index))
-                        SelectedInstruments.Remove(index);
-                };
-                return e;
-            };
 
             var selectionTable = new TableLayout
             {

@@ -96,6 +96,7 @@
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Remove="AboutWindow.Designer.cs" />
         <Compile Remove="BankGenerator.Designer.cs" />
         <Compile Remove="CreateStreamTool.Designer.cs" />
         <Compile Remove="Instrument Selector.Designer.cs" />
@@ -136,6 +137,7 @@
       <None Remove="Resources\waveArchive.ico" />
     </ItemGroup>
     <ItemGroup>
+      <None Include="AboutWindow.Designer.cs" />
       <None Include="BankGenerator.Designer.cs" />
       <None Include="CreateStreamTool.Designer.cs" />
       <None Include="InstrumentSelector.Designer.cs" />

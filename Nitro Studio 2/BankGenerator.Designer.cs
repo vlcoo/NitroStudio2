@@ -24,7 +24,7 @@
         /// </summary>
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BankGenerator));
-            this.instruments = new System.Windows.Forms.DataGridView();
+            this.instrumentsGrid = new System.Windows.Forms.DataGridView();
             this.label2 = new System.Windows.Forms.Label();
             this.createBnk = new System.Windows.Forms.Button();
             this.play = new System.Windows.Forms.DataGridViewButtonColumn();
@@ -32,25 +32,25 @@
             this.instrument = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.newId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.waveArchiveMode = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.instruments)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.instrumentsGrid)).BeginInit();
             this.SuspendLayout();
             // 
-            // instruments
+            // instrumentsGrid
             // 
-            this.instruments.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.instrumentsGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.instruments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.instruments.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.instrumentsGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.instrumentsGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.play,
             this.bank,
             this.instrument,
             this.newId,
             this.waveArchiveMode});
-            this.instruments.Location = new System.Drawing.Point(15, 34);
-            this.instruments.Name = "instruments";
-            this.instruments.Size = new System.Drawing.Size(523, 274);
-            this.instruments.TabIndex = 3;
+            this.instrumentsGrid.Location = new System.Drawing.Point(15, 34);
+            this.instrumentsGrid.Name = "instrumentsGrid";
+            this.instrumentsGrid.Size = new System.Drawing.Size(523, 274);
+            this.instrumentsGrid.TabIndex = 3;
             // 
             // label2
             // 
@@ -122,20 +122,20 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(552, 343);
             this.Controls.Add(this.createBnk);
-            this.Controls.Add(this.instruments);
+            this.Controls.Add(this.instrumentsGrid);
             this.Controls.Add(this.label2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "BankGenerator";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Bank Generator";
-            ((System.ComponentModel.ISupportInitialize)(this.instruments)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.instrumentsGrid)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
         private System.Windows.Forms.Label label2;
-        public System.Windows.Forms.DataGridView instruments;
+        public System.Windows.Forms.DataGridView instrumentsGrid;
         public System.Windows.Forms.Button createBnk;
         private System.Windows.Forms.DataGridViewButtonColumn play;
         private System.Windows.Forms.DataGridViewComboBoxColumn bank;

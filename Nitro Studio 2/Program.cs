@@ -62,12 +62,17 @@ internal static class Program
                     r.FromOtherStreamFile(s);
                     r.Write(MainWindow.NitroPath + "/" + "tmpStream" + 0 + ".wav");
                     //Application.Run(new StreamPlayer(null, MainWindow.NitroPath + "/" + "tmpStream" + 0 + ".wav",
-                        //Path.GetFileNameWithoutExtension(args[0])));
+                    //Path.GetFileNameWithoutExtension(args[0])));
                     break;
             }
         else
+        {
             //Start the editor.
-            //Application.Run(new MainWindow());
-            new Application(Eto.Platform.Detect).Run(new InstrumentSelector());
+            //Application.Run(new MainWindow()); 
+
+            var a = new Application(Eto.Platform.Detect);
+            var w = new AboutWindow();
+            a.Run(w);
+        }
     }
 }

@@ -7508,7 +7508,7 @@ public abstract class EditorBase : Form
     private void AboutNitroStudio2ToolStripMenuItem_Click(object sender, EventArgs e)
     {
         var a = new AboutWindow();
-        a.ShowDialog();
+        a.Show();
     }
 
     private void sF2ToDLSToolStripMenuItem_Click(object sender, EventArgs e)
